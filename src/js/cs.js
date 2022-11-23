@@ -80,6 +80,18 @@ async function showHideExtension(activeTab, port, request) {
 		if (document.querySelector('#superDevWrapper') === null) {
 			let superDev = document.createElement('body');
 			superDev.id = 'superDev';
+			superDev.style.cssText = `
+			display: block !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			border: 0 !important;
+			outline: 0 !important;
+			background-color: transparent !important;
+			box-sizing: border-box !important;
+			overflow: hidden !important;
+			visibility: hidden !important;
+			width: 0px !important;
+			height: 0px !important;`;
 
 			let superDevWrapper = document.createElement('superdev-wrapper');
 			superDevWrapper.id = 'superDevWrapper';
