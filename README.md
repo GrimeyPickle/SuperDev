@@ -18,7 +18,9 @@ An Open-source Swiss Army Toolbox for Web Designers, Developers, and Founders Th
 * ```Delete Element``` - Delete Any Element From the Page
 * ```Export Element``` - Export HTML + Used CSS of Any Page Element
 * ```Clear All Cache``` - Clear Cache/Cookie/LocalStorage
-<br>
+
+This project is tested with BrowserStack.
+</br>
 
 https://user-images.githubusercontent.com/52224233/202926098-43390400-63e2-4ede-94a1-0fca804ba7ad.mov
 
