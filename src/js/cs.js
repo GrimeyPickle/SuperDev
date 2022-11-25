@@ -78,96 +78,102 @@ async function showHideExtension(activeTab, port, request) {
 	if (document.contentType === 'text/html') {
 		// If Popup Doesn't Exists, Create
 		if (document.querySelector('#superDevWrapper') === null) {
-			chrome.storage.local.get(['allFeatures'], function (result) {
-				let superDev = document.createElement('body');
-				superDev.id = 'superDev';
-				superDev.style.cssText = `
-				display: block !important;
-				padding: 0 !important;
-				margin: 0 !important;
-				border: 0 !important;
-				outline: 0 !important;
-				background-color: transparent !important;
-				box-sizing: border-box !important;
-				overflow: hidden !important;
-				visibility: hidden !important;
-				width: 0px !important;
-				height: 0px !important;`;
+			let superDev = document.createElement('body');
+			superDev.id = 'superDev';
+			superDev.style.cssText = `
+			display: block !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			border: 0 !important;
+			outline: 0 !important;
+			background-color: transparent !important;
+			box-sizing: border-box !important;
+			overflow: hidden !important;
+			visibility: hidden !important;
+			width: 0px !important;
+			height: 0px !important;`;
 
-				let superDevWrapper = document.createElement('superdev-wrapper');
-				superDevWrapper.id = 'superDevWrapper';
-				superDevWrapper.style.cssText = `
-				display: block !important;
-				padding: 0 !important;
-				margin: 0 !important;
-				border: 0 !important;
-				outline: 0 !important;
-				background-color: transparent !important;
-				box-sizing: border-box !important;
-				overflow: hidden !important;
+			let popupShadow;
+			let colorTheme = await chrome.storage.local.get(['colorTheme']);
+			if (colorTheme['colorTheme'] === undefined || colorTheme['colorTheme'] === 'dark')
+				popupShadow = 'rgb(0 0 0 / 12%) 0px 0px 8px 0px, rgb(0 0 0 / 24%) 0px 4px 8px 0px';
+			else if (colorTheme['colorTheme'] === 'light') popupShadow = 'rgb(0 0 0 / 6%) 0px 0px 8px 0px, rgb(0 0 0 / 12%) 0px 4px 8px 0px';
+
+			let superDevWrapper = document.createElement('superdev-wrapper');
+			superDevWrapper.id = 'superDevWrapper';
+			superDevWrapper.style.cssText = `
+			display: block !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			border: 0 !important;
+			outline: 0 !important;
+			background-color: transparent !important;
+			box-sizing: border-box !important;
+			overflow: hidden !important;
 	
-				position: fixed !important;
-				top: 18px !important;
-				right: 18px !important;
-				visibility: hidden !important;
-				width: 335px !important;
-				border-radius: 8px !important;
-				z-index: 2147483646 !important;`;
+			position: fixed !important;
+			top: 18px !important;
+			right: 18px !important;
+			visibility: hidden !important;
+			width: 335px !important;
+			box-shadow: ${popupShadow} !important;
+			border-radius: 8px !important;
+			z-index: 2147483646 !important;`;
 
-				let superDevHandler = document.createElement('superdev-handler');
-				superDevHandler.id = 'superDevHandler';
-				superDevHandler.style.cssText = `
-				display: block !important;
-				position: relative !important;
-				padding: 0 !important;
-				margin: 0 !important;
-				border: 0 !important;
-				outline: 0 !important;
-				background-color: transparent !important;
-				box-sizing: border-box !important;
-				overflow: hidden !important;
+			let superDevHandler = document.createElement('superdev-handler');
+			superDevHandler.id = 'superDevHandler';
+			superDevHandler.style.cssText = `
+			display: block !important;
+			position: relative !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			border: 0 !important;
+			outline: 0 !important;
+			background-color: transparent !important;
+			box-sizing: border-box !important;
+			overflow: hidden !important;
 	
-				cursor: move !important;
-				width: 18px !important;
-				height: 38.5px !important;
-				margin-left: 168px !important;
-				margin-bottom: -38.5px !important;
-				border-radius: 8px !important;
-				z-index: 2147483647 !important;`;
+			cursor: move !important;
+			width: 18px !important;
+			height: 38.5px !important;
+			margin-left: 168px !important;
+			margin-bottom: -38.5px !important;
+			border-radius: 8px !important;
+			z-index: 2147483647 !important;`;
 
-				let height = PopupHeight(JSON.parse(result['allFeatures']));
-				let superDevPopup = document.createElement('iframe');
-				superDevPopup.src = chrome.runtime.getURL('index.html');
-				superDevPopup.id = 'superDevPopup';
-				superDevPopup.scrolling = 'no';
-				superDevPopup.allow = 'clipboard-write';
-				superDevPopup.style.cssText = `
-				display: block !important;
-				padding: 0 !important;
-				margin: 0 !important;
-				border: 0 !important;
-				outline: 0 !important;
-				background-color: transparent !important;
-				box-sizing: border-box !important;
-				overflow: hidden !important;
+			let allFeatures = await chrome.storage.local.get(['allFeatures']);
+			let height = PopupHeight(JSON.parse(allFeatures['allFeatures']));
+			let superDevPopup = document.createElement('iframe');
+			superDevPopup.src = chrome.runtime.getURL('index.html');
+			superDevPopup.id = 'superDevPopup';
+			superDevPopup.scrolling = 'no';
+			superDevPopup.allow = 'clipboard-write';
+			superDevPopup.style.cssText = `
+			display: block !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			border: 0 !important;
+			outline: 0 !important;
+			background-color: transparent !important;
+			box-sizing: border-box !important;
+			overflow: hidden !important;
 	
-				width: 335px !important;
-				height: ${height}px !important;
-				border-radius: 8px !important;
-				z-index: 2147483646 !important;`;
+			width: 335px !important;
+			height: ${height}px !important;
+			border-radius: 8px !important;
+			z-index: 2147483646 !important;`;
 
-				document.documentElement.appendChild(superDev);
-				superDev.appendChild(superDevWrapper);
-				superDevWrapper.appendChild(superDevHandler);
-				superDevWrapper.appendChild(superDevPopup);
+			document.documentElement.appendChild(superDev);
+			superDev.appendChild(superDevWrapper);
+			superDevWrapper.appendChild(superDevHandler);
+			superDevWrapper.appendChild(superDevPopup);
 
-				$('#superDevWrapper').draggable({
-					handle: '#superDevHandler',
-					iframeFix: true,
-					containment: 'document',
-				});
-				port.postMessage({action: 'popupCreated'});
+			$('#superDevWrapper').draggable({
+				handle: '#superDevHandler',
+				iframeFix: true,
+				containment: 'document',
 			});
+			port.postMessage({action: 'popupCreated'});
 		}
 
 		// If Popup Exists, Show/Hide
@@ -238,29 +244,10 @@ function setPopupShadow(activeTab, port, request) {
 
 function setFirstRender(activeTab, port, request) {
 	let superDevWrapper = document.querySelector('#superDevWrapper');
-
-	// Shadow + Visible
-	requestAnimationFrame(function () {
-		requestAnimationFrame(function () {
-			chrome.storage.local.get(['colorTheme'], async function (result) {
-				if (result['colorTheme'] === 'dark') {
-					superDevWrapper.style.setProperty('box-shadow', `rgb(0 0 0 / 12%) 0px 0px 8px 0px, rgb(0 0 0 / 24%) 0px 4px 8px 0px`, 'important');
-					port.postMessage({action: 'shadowChanged'});
-				} else if (result['colorTheme'] === 'light') {
-					superDevWrapper.style.setProperty('box-shadow', `rgb(0 0 0 / 6%) 0px 0px 8px 0px, rgb(0 0 0 / 12%) 0px 4px 8px 0px`, 'important');
-					port.postMessage({action: 'firstRenderShadowChanged'});
-				}
-			});
-			requestAnimationFrame(function () {
-				requestAnimationFrame(function () {
-					if (superDevWrapper.style.getPropertyValue('visibility') === 'hidden') {
-						superDevWrapper.style.setProperty('visibility', 'visible', 'important');
-						port.postMessage({action: 'firstRenderPopupVisible'});
-					}
-				});
-			});
-		});
-	});
+	if (superDevWrapper.style.getPropertyValue('visibility') === 'hidden') {
+		superDevWrapper.style.setProperty('visibility', 'visible', 'important');
+		port.postMessage({action: 'firstRenderDone'});
+	}
 }
 
 async function activateTextEditor(activeTab, port, request) {
