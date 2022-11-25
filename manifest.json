@@ -4,7 +4,7 @@
 	"author": "Choudhary Abdullah",
 	"description": "A Swiss Army Toolbox for Web Designers and Developers.",
 	"manifest_version": 3,
-	"minimum_chrome_version": "88",
+	"minimum_chrome_version": "93",
 	"permissions": ["storage", "activeTab", "contextMenus", "tabs", "scripting", "management", "browsingData", "declarativeNetRequest"],
 	"host_permissions": ["http://*/*", "https://*/*"],
 	"background": {
