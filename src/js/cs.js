@@ -226,33 +226,37 @@ function setFirstRender(activeTab, port, request) {
 	let superDevWrapper = document.querySelector('#superDevWrapper');
 	let superDevPopup = document.querySelector('#superDevPopup');
 
-	// Height
-	chrome.storage.local.get(['howLongPopupIs' + activeTab[0].id], async function (result) {
-		if (result['howLongPopupIs' + activeTab[0].id] !== request.height) {
-			await chrome.storage.local.set({['howLongPopupIs' + activeTab[0].id]: request.height});
-			superDevPopup.style.setProperty('height', `${request.height}px`, 'important');
-			port.postMessage({action: 'firstRenderHeightChanged'});
-		}
-	});
-
-	// Shadow
-	chrome.storage.local.get(['colorTheme'], async function (result) {
-		if (result['colorTheme'] === 'dark') {
-			superDevWrapper.style.setProperty('box-shadow', `rgb(0 0 0 / 12%) 0px 0px 8px 0px, rgb(0 0 0 / 24%) 0px 4px 8px 0px`, 'important');
-			port.postMessage({action: 'shadowChanged'});
-		} else if (result['colorTheme'] === 'light') {
-			superDevWrapper.style.setProperty('box-shadow', `rgb(0 0 0 / 6%) 0px 0px 8px 0px, rgb(0 0 0 / 12%) 0px 4px 8px 0px`, 'important');
-			port.postMessage({action: 'firstRenderShadowChanged'});
-		}
-	});
-
-	// Visible
+	// Height + Shadow + Visible
 	requestAnimationFrame(function () {
 		requestAnimationFrame(function () {
-			if (superDevWrapper.style.getPropertyValue('visibility') === 'hidden') {
-				superDevWrapper.style.setProperty('visibility', 'visible', 'important');
-				port.postMessage({action: 'firstRenderPopupVisible'});
-			}
+			chrome.storage.local.get(['howLongPopupIs' + activeTab[0].id], async function (result) {
+				if (result['howLongPopupIs' + activeTab[0].id] !== request.height) {
+					await chrome.storage.local.set({['howLongPopupIs' + activeTab[0].id]: request.height});
+					superDevPopup.style.setProperty('height', `${request.height}px`, 'important');
+					port.postMessage({action: 'firstRenderHeightChanged'});
+				}
+			});
+			requestAnimationFrame(function () {
+				requestAnimationFrame(function () {
+					chrome.storage.local.get(['colorTheme'], async function (result) {
+						if (result['colorTheme'] === 'dark') {
+							superDevWrapper.style.setProperty('box-shadow', `rgb(0 0 0 / 12%) 0px 0px 8px 0px, rgb(0 0 0 / 24%) 0px 4px 8px 0px`, 'important');
+							port.postMessage({action: 'shadowChanged'});
+						} else if (result['colorTheme'] === 'light') {
+							superDevWrapper.style.setProperty('box-shadow', `rgb(0 0 0 / 6%) 0px 0px 8px 0px, rgb(0 0 0 / 12%) 0px 4px 8px 0px`, 'important');
+							port.postMessage({action: 'firstRenderShadowChanged'});
+						}
+					});
+					requestAnimationFrame(function () {
+						requestAnimationFrame(function () {
+							if (superDevWrapper.style.getPropertyValue('visibility') === 'hidden') {
+								superDevWrapper.style.setProperty('visibility', 'visible', 'important');
+								port.postMessage({action: 'firstRenderPopupVisible'});
+							}
+						});
+					});
+				});
+			});
 		});
 	});
 }
